@@ -44,7 +44,7 @@ def send_news():
         my_friend.send(contents[1])
         my_friend.send(u'心若向阳，微笑向暖！愿我们都可以勇敢且温柔，有爱可寻亦有梦可追。早安！')
         # 每86400秒（1天），发送1次
-        t = Timer(10, send_news)
+        t = Timer(86400, send_news)
         # ran_int = random.randint(0,100)
         # t = Timer(86400+ran_int,send_news)
 
@@ -60,8 +60,8 @@ def getDateByTimeStamp(time_stamp):
     return otherStyleTime
 
 def getWeather():
-    api_url = 'https://api.caiyunapp.com/v2/TAkhjf8d1nlSlspN/116.297006,40.043227/daily.json'
     try:
+        api_url = 'https://api.caiyunapp.com/v2/TAkhjf8d1nlSlspN/116.297006,40.043227/daily.json'
         response = urllib.request.urlopen(api_url)
         weather = json.loads(response.read().decode('utf-8'))
         if weather['status'] and weather['status'] == 'ok':
@@ -85,7 +85,7 @@ def getWeather():
             weather_str += (u'天气状况: %s; ' %(SKYCON_DICT[skycon['value']]))
             return weather_str
     except:
-        return u'o(╯□╰)o今天收到宇宙射线影响, 木有拿到天气数据!'
+        return u'o(╯□╰)o今天受到宇宙射线影响, 木有拿到天气数据!'
 
 def task():
     try:
@@ -107,16 +107,17 @@ def regular_task(sched_timer):
         if now == sched_timer:
             task()
             sched_timer = sched_timer + 86400
-            print(u'本次任务执行时间:' + getDateByTimeStamp(now))
-            time.sleep(86300);
+            print(u'\n今日消息发送时间:' + getDateByTimeStamp(now))
+            print(u'\n下次执行时间:' + getDateByTimeStamp(sched_timer))
         elif now > sched_timer:
             while now > sched_timer:
                 sched_timer = sched_timer + 86400
-            print(u'\n下次执行时间:' + getDateByTimeStamp(sched_timer))
+            print(u'\n当前时间: %s, 下次执行时间: %s' %(getDateByTimeStamp(now), getDateByTimeStamp(sched_timer)))
+        time.sleep(0.001)
 
 if __name__ == "__main__":
     # dt = '2018-03-21 06:00:00'
-    dt = '2019-03-21 06:00:00'
+    dt = '2019-04-01 06:00:00'
     sched_timer = int(time.mktime(time.strptime(dt, "%Y-%m-%d %H:%M:%S")))
     regular_task(sched_timer)
     # send_news()
